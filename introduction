@@ -1,0 +1,113 @@
+import streamlit as st
+import numpy as np
+
+st.title("Interactive NumPy Playground")
+
+st.sidebar.header("Choose a Functionality")
+
+options = st.sidebar.radio(
+    "Explore NumPy Features",
+    ["Array Creation", "Basic Operations", "Array Reshaping", "Array Indexing"]
+)
+
+if options == "Array Creation":
+    st.header("Array Creation")
+    
+    rows = st.number_input("Number of Rows", min_value=1, max_value=10, value=3)
+    cols = st.number_input("Number of Columns", min_value=1, max_value=10, value=3)
+
+    array_type = st.selectbox(
+        "Select Array Type", 
+        ["Zeros", "Ones", "Random", "Range"]
+    )
+    
+    # Create arrays based on the selected type
+    if array_type == "Zeros":
+        array = np.zeros((rows, cols))
+    elif array_type == "Ones":
+        array = np.ones((rows, cols))
+    elif array_type == "Random":
+        array = np.random.rand(rows, cols)
+    elif array_type == "Range":
+        start = st.number_input("Start", value=0)
+        stop = st.number_input("Stop", value=10)
+        step = st.number_input("Step", value=1)
+        array = np.arange(start, stop, step).reshape(rows, -1)
+
+    st.write("Generated Array:")
+    st.write(array)
+
+# Basic Operations Section
+elif options == "Basic Operations":
+    st.header("Basic Operations")
+
+    # Create two random arrays
+    size = st.slider("Array Size", min_value=1, max_value=10, value=3)
+    array1 = np.random.randint(1, 10, size=(size, size))
+    array2 = np.random.randint(1, 10, size=(size, size))
+
+    st.write("Array 1:")
+    st.write(array1)
+    st.write("Array 2:")
+    st.write(array2)
+
+    # Select operation
+    operation = st.selectbox("Select Operation", ["Add", "Subtract", "Multiply", "Dot Product"])
+
+    # Perform selected operation
+    if operation == "Add":
+        result = np.add(array1, array2)
+    elif operation == "Subtract":
+        result = np.subtract(array1, array2)
+    elif operation == "Multiply":
+        result = np.multiply(array1, array2)
+    elif operation == "Dot Product":
+        result = np.dot(array1, array2)
+
+    st.write("Result:")
+    st.write(result)
+
+# Array Reshaping Section
+elif options == "Array Reshaping":
+    st.header("Array Reshaping")
+
+    # Array size input
+    original_size = st.number_input("Enter total elements in array:", min_value=1, value=9)
+    array = np.arange(original_size)
+    st.write("Original Array:", array)
+
+    # New shape input
+    new_shape = st.text_input("Enter new shape (e.g., 3, 3):", value="3, 3")
+    try:
+        shape_tuple = tuple(map(int, new_shape.split(',')))
+        reshaped_array = array.reshape(shape_tuple)
+        st.write("Reshaped Array:")
+        st.write(reshaped_array)
+    except:
+        st.error("Invalid shape for the given number of elements.")
+
+# Array Indexing Section
+elif options == "Array Indexing":
+    st.header("Array Indexing and Slicing")
+
+    # Array generation
+    array = np.random.randint(1, 20, size=(5, 5))
+    st.write("Sample Array:")
+    st.write(array)
+
+    # Indexing inputs
+    row = st.number_input("Row Index:", min_value=0, max_value=4, value=0)
+    col = st.number_input("Column Index:", min_value=0, max_value=4, value=0)
+
+    # Display element
+    st.write("Selected Element:", array[row, col])
+
+    # Slicing inputs
+    row_start = st.number_input("Row Start:", min_value=0, max_value=4, value=0)
+    row_end = st.number_input("Row End:", min_value=1, max_value=5, value=5)
+    col_start = st.number_input("Column Start:", min_value=0, max_value=4, value=0)
+    col_end = st.number_input("Column End:", min_value=1, max_value=5, value=5)
+
+    # Display slice
+    st.write("Array Slice:")
+    st.write(array[row_start:row_end, col_start:col_end])
